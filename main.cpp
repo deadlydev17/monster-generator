@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <random>
 
 class Monster {
 public:
@@ -51,13 +52,21 @@ public:
     }
   };
   void print() const {
-    std::cout << m_name << " the " << getTypeMonster() << " has " << m_hitPoint << " hit points and says *" << m_roar << "* \n";
+    std::cout << m_name << " the " << getTypeMonster() << " has " << m_hitPoint
+              << " hit points and says *" << m_roar << "* \n";
+  }
+};
+
+class MonsterGenerator {
+public:
+  static Monster generateMonster() {
+    return Monster{Monster::Type::skeleton, "Bob", "rattle", 4};
   }
 };
 
 int main() {
 
-  Monster skeleton{Monster::Type::skeleton, "Bones", "rattle", 4};
+  Monster skeleton{MonsterGenerator::generateMonster()};
   skeleton.print();
 
   return 0;
