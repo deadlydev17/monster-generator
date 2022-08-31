@@ -1,7 +1,8 @@
+#include <array>
 #include <iostream>
+#include <random>
 #include <string>
 #include <string_view>
-#include <random>
 
 class Monster {
 public:
@@ -59,8 +60,24 @@ public:
 
 class MonsterGenerator {
 public:
+  std::array<std::string_view, 6> s_names{
+      "Bob", "Jerry", "Alex", "Jack", "Mike", "Dick",
+  };
+  std::array<std::string_view, 6> s_rour{
+      "rattle", "roar", "shiii", "bruhh", "Damn", "shit",
+  };
+
+  static int getRandomNumber(int min, int max) {
+    std::mt19937 mt{std::random_device{}()};
+    std::uniform_int_distribution<> die{min, max};
+    return die(mt);
+  }
+
   static Monster generateMonster() {
-    return Monster{Monster::Type::skeleton, "Bob", "rattle", 4};
+    auto monsterType{static_cast<int>(getRandomNumber(
+        0, static_cast<int>(Monster::Type::max_monster_types) - 1))};
+    return Monster{static_cast<Monster::Type>(monsterType), "Bob", "rattle",
+                   getRandomNumber(1, 100)};
   }
 };
 
