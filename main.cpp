@@ -1,5 +1,7 @@
+#include <algorithm>
 #include <array>
 #include <iostream>
+#include <iterator>
 #include <random>
 #include <string>
 #include <string_view>
@@ -60,12 +62,9 @@ public:
 
 class MonsterGenerator {
 public:
-  std::array<std::string_view, 6> s_names{
-      "Bob", "Jerry", "Alex", "Jack", "Mike", "Dick",
-  };
-  std::array<std::string_view, 6> s_rour{
-      "rattle", "roar", "shiii", "bruhh", "Damn", "shit",
-  };
+  using monsterName = std::array<std::string, 6>;
+  using monsterRoar = std::array<std::string, 6>;
+  using index_t = monsterName::size_type;
 
   static int getRandomNumber(int min, int max) {
     std::mt19937 mt{std::random_device{}()};
@@ -74,10 +73,24 @@ public:
   }
 
   static Monster generateMonster() {
+    static monsterName s_names{
+        "Bob", "Jerry", "Alex", "Jack", "Mike", "Dick",
+    };
+
+    static monsterRoar s_roar{
+        "rattle", "roar", "shiii", "bruhh", "Damn", "shit",
+    };
+
+    index_t lenghtName{std::size(s_names)};
+    index_t lenghtrour{std::size(s_roar)};
+
+    auto names{s_names[getRandomNumber(0, static_cast<int>(lenghtName) - 1)]};
+    auto roars{s_roar[getRandomNumber(0, static_cast<int>(lenghtrour)) - 1]};
+    auto randomNum{getRandomNumber(1, 100)};
     auto monsterType{static_cast<int>(getRandomNumber(
         0, static_cast<int>(Monster::Type::max_monster_types) - 1))};
-    return Monster{static_cast<Monster::Type>(monsterType), "Bob", "rattle",
-                   getRandomNumber(1, 100)};
+
+    return {static_cast<Monster::Type>(monsterType), names, roars, randomNum};
   }
 };
 
